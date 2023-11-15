@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <title>Reykjanes-2023 grindavik eruption</title>
-    <link rel="stylesheet" type="text/css" href="https://x3dom.netlify.com/x3dom.css">
-    <script type="text/javascript" src="https://x3dom.netlify.com/x3dom-full.debug.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/release/x3dom.css">
+    <script type="text/javascript" src="https://www.x3dom.org/release/x3dom-full.js"></script>
     <script src="//d3js.org/d3.v5.min.js"></script>
     <style>
       #x3dscene {
@@ -74,7 +74,7 @@
 <body onload='init()' >
   
 <div id='info'>
-    <h2>The 2023 Grindavik sequence</h2>
+    <h2>The 2023 Grindavik sequence, last 48h ( data by Icelandic Meteorological Office ) </h2>
     <div>
         <span id='faultInfo'>Doubleclick to recenter</span>
     </div>
@@ -94,10 +94,10 @@
     <Scene onmousemove='showCoords(event)'>
         <PointLight ambientIntensity='0.2' radius='20000000'></PointLight>
         <GeoViewpoint position="63.9 -22.434 150000" orientation="1 0 0 -1.57" fieldOfView="0.3" centerofRotation="63.854 -22.434 -5000" description="map"></GeoViewpoint>
-<!--         <GeoViewpoint position="34.76 -117.6 5000" orientation="1 0 0 0" centerofRotation="35.76 -117.6 -7000" description="toNorth"></GeoViewpoint>
-        <GeoViewpoint position="36.76 -117.6 5000" orientation="0 1 0 3.14" centerofRotation="35.76 -117.6 -7000" description="toSouth"></GeoViewpoint>
-        <GeoViewpoint position="35.76 -118.6 5000" orientation="0 1 0 -1.57" centerofRotation="35.76 -117.6 -7000" description="toEast"></GeoViewpoint>
-        <GeoViewpoint position="35.76 -116.6 5000" orientation="0 1 0 1.57" centerofRotation="35.76 -117.6 -7000" description="toWest"></GeoViewpoint> -->
+        <GeoViewpoint position="63.4 -22.434 -5000" orientation="1 0 0 0" centerofRotation="63.854 -22.434 -5000" description="toNorth"></GeoViewpoint>
+        <GeoViewpoint position="64.4 -22.434 -5000" orientation="0 1 0 3.14" centerofRotation="63.854 -22.434 -5000" description="toSouth"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -23.434 -5000" orientation="0 1 0 -1.57" centerofRotation="63.854 -22.434 -5000" description="toEast"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -21.434 -5000" orientation="0 1 0 1.57" centerofRotation="63.854 -22.434 -5000" description="toWest"></GeoViewpoint>
         
 <!--         <inline url="cal_outline.x3d"></inline>
         <inline url="QuaternaryFaults_CA_utm11nad27_scal2.x3d"></inline>
@@ -110,7 +110,7 @@
                   <Appearance DEF='cursorApp'>
                       <Material diffuseColor='1 1 1'></Material>
                   </Appearance>
-                  <Box size='5000 100 100'></Box>
+                  <Box size='1000 100 100'></Box>
                 </Shape>
                 <Shape>
                   <Appearance USE='cursorApp'></Appearance>
@@ -174,7 +174,7 @@
             </Transform>
           </Transform>
         </GeoLocation>
-        <GeoLocation geoCoords="64 -22 0">
+        <GeoLocation geoCoords="63.898 -22.256944 -200">
           <Inline url='"../gltf/fagradalsfjall_02.11.2023.glb"'></Inline>
         </GeoLocation>
         <Group DEF='CFM5' onclick="showName(event)">
