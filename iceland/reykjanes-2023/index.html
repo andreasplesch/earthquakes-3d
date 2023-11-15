@@ -187,7 +187,7 @@
 </x3d>
 </div>
   <script type="text/javascript">
-  var eqData; // global to share
+  var eqData, firstDate = new Date(); // global to share
   function init() {
 
     loadTraces();
@@ -249,7 +249,7 @@
         let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
         eqData = VI.quakeInfo;
         var data = eqData;
-        var firstDate = eqData[eqData.length - 1].t;
+        firstDate = eqData[eqData.length - 1].t;
         data.forEach((d, i) => {
             let c=[+d.lon, +d.lat, +d.dep];
             if (c[0]<xmin || c[0]>xmax || c[1]<ymin || c[1]>ymax) return
@@ -474,7 +474,7 @@
   function showInterval(event) {
      if (event.fieldName == 'value_changed')
      {
-      document.querySelector('#faultInfo').textContent = (Math.min(-event.value.x, 48)).toFixed(2) + ' hours since first event 48h ago';
+      document.querySelector('#faultInfo').textContent = (Math.min(-event.value.x, 48)).toFixed(2) + ' hours since 2023/' + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() + " " + firstDate.getUTCHours() + ":" + firstDate.getUTCMinutes();
      }
   }
     
