@@ -181,7 +181,7 @@
       <!-- add fault inlines here -->
         </Group>
         <TimeSensor DEF='CLOCK' loop='true' cycleInterval='15'></TimeSensor>
-        <PositionInterpolator2D DEF='SHIFTER' key='0 0.5 1' keyValue='0,0 -24,0 -48,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
+        <PositionInterpolator2D DEF='SHIFTER' key='0 0.5 1' keyValue='0,0 -24,0 -72,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
         <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='SHIFTER' toField='set_fraction'></ROUTE>
     </Scene>
 </x3d>
@@ -464,7 +464,7 @@
       let n = new x3dom.fields.SFVec3f(event.normalX, event.normalY, event.normalZ);
       let dip = Math.acos(gc[0].normalize().dot(n)) * 180/Math.PI;
       dip = dip > 90 ? 180 - dip : dip;
-      document.querySelector('#faultInfo').textContent = 
+      document.querySelector('#eqInfo').textContent = 
  `${(-gd.x).toFixed(3)}°W ${gd.y.toFixed(3)}°N ${
  gd.z >= 0 ? gd.z.toFixed(0).padStart(6, "0") : ("-"+ (-gd.z).toFixed(0).padStart(5,"0"))
  }m dip: ${dip.toFixed(0).padStart(2,"0")}°`;
@@ -474,7 +474,7 @@
   function showInterval(event) {
      if (event.fieldName == 'value_changed')
      {
-      document.querySelector('#faultInfo').textContent = (-event.value.x).toFixed(2) + ' hours since first event 48h ago';
+      document.querySelector('#faultInfo').textContent = (Math.min(-event.value.x, 48)).toFixed(2) + ' hours since first event 48h ago';
      }
   }
     
