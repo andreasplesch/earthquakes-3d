@@ -93,7 +93,7 @@
     <param name="showStat" value="false"></param>
     <Scene onmousemove='showCoords(event)'>
         <PointLight ambientIntensity='0.2' radius='20000000'></PointLight>
-        <GeoViewpoint position="63.8 -22.5 200000" orientation="1 0 0 -1.57" fieldOfView="0.3" centerofRotation="63.76 -22.5 -7000" description="map"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -22.434 150000" orientation="1 0 0 -1.57" fieldOfView="0.3" centerofRotation="63.854 -22.434 -5000" description="map"></GeoViewpoint>
 <!--         <GeoViewpoint position="34.76 -117.6 5000" orientation="1 0 0 0" centerofRotation="35.76 -117.6 -7000" description="toNorth"></GeoViewpoint>
         <GeoViewpoint position="36.76 -117.6 5000" orientation="0 1 0 3.14" centerofRotation="35.76 -117.6 -7000" description="toSouth"></GeoViewpoint>
         <GeoViewpoint position="35.76 -118.6 5000" orientation="0 1 0 -1.57" centerofRotation="35.76 -117.6 -7000" description="toEast"></GeoViewpoint>
@@ -114,11 +114,11 @@
                 </Shape>
                 <Shape>
                   <Appearance USE='cursorApp'></Appearance>
-                  <Box size='100 5000 100'></Box>
+                  <Box size='100 1000 100'></Box>
                 </Shape>
                 <Shape>
                   <Appearance USE='cursorApp'></Appearance>
-                  <Box size='100 100 5000'></Box>
+                  <Box size='100 100 1000'></Box>
                 </Shape>
             </Transform>
         </GeoLocation>
@@ -130,7 +130,7 @@
                   <Material diffuseColor='1 1 0'></Material>
                   <DepthMode depthFunc='ALWAYS'></DepthMode>
                 </Appearance>
-                <Box size='200 50 50'></Box>
+                <Box size='240 20 20'></Box>
               </Shape>
             </Transform>
             <Transform translation='0 100 -100'>
@@ -145,7 +145,7 @@
             <Transform translation='-100 0 -100'>
               <Shape DEF='eqyBar'>
                 <Appearance USE='eqSelApp'></Appearance>
-                <Box size='50 200 50'></Box>
+                <Box size='20 240 20'></Box>
               </Shape>
             </Transform>
             <Transform translation='100 0 -100'>
@@ -160,7 +160,7 @@
             <Transform translation='-100 -100 0'>
               <Shape DEF='eqzBar'>
                 <Appearance USE='eqSelApp'></Appearance>
-                <Box size='50 50 200'></Box>
+                <Box size='20 20 240'></Box>
               </Shape>
             </Transform>
             <Transform translation='100 -100 0'>
@@ -326,7 +326,7 @@
 //             coordindex += [0,4,7,1].map(i => baseIndex + i).join()+", -1 ";
 //             coordindex += [3,2,6,5].map(i => baseIndex + i).join()+", -1 ";
 
-            let colorC = mag/5.4;
+            let colorC = mag/4.0;
             let d3c = d3.cubehelix(30+(colorC*330), 1.9*(colorC), 0.8*colorC).rgb();
             let sfcolor = [(d3c.r/255).toFixed(4), (d3c.g/255).toFixed(4), (d3c.b/255).toFixed(4)].join(' ');
             
@@ -347,7 +347,7 @@
         eqGeo.setAttribute('coordIndex', coordindex);
         eqGroup.appendChild(eqShape);
         document.querySelector('Scene').appendChild(eqGroup);
-        document.querySelector('#faultInfo').textContent=counter+" earthquakes displayed"; 
+        document.querySelector('#faultInfo').textContent = eqData.length  +" earthquakes displayed"; 
     })
   }
   function loadTraces() {
