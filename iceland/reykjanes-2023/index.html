@@ -180,6 +180,9 @@
         <Group DEF='CFM5' onclick="showName(event)">
       <!-- add fault inlines here -->
         </Group>
+        <TimeSensor DEF='CLOCK' loop='true' cycleInterval='15'></TimeSensor>
+        <PositionInterpolator2D DEF='SHIFTER' key='0 0.5 1' keyValue='0,0 -24,0 -48,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
+        <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='SHIFTER' toField='set_fraction'></ROUTE>
     </Scene>
 </x3d>
 </div>
@@ -200,6 +203,7 @@
     var eqShape=document.createElement('Shape');
     eqShape.setAttribute('DEF','hypo');
     var eqApp=document.createElement('Appearance');
+    
     var eqMat=document.createElement('Material');
     eqMat.setAttribute('diffuseColor','0 1 1');
     eqMat.setAttribute('transparency','0.2');
@@ -207,18 +211,30 @@
     var eqDepthmode=document.createElement('DepthMode');
     eqDepthmode.setAttribute('depthFunc','ALWAYS');
 
+    var eqTex=document.createElement('PixelTexture');
+    eqTex.setAttribute('image','7 1 4 0xFF4000C0 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF000000');
+    eqTex.setAttribute('repeatS','false');
+
+    var eqTexTrafo=document.createElement('TextureTransform');
+    eqTexTrafo.setAttribute('scale','0.25 0.25');
+    eqTexTrafo.setAttribute('DEF','TEXTRAFO');
+
     eqApp.appendChild(eqMat);
+    eqApp.appendChild(eqTex);
+    eqApp.appendChild(eqTexTrafo);
     eqApp.appendChild(eqDepthmode);
-    
+
     eqShape.appendChild(eqApp);
     //eqGeo=document.createElement('Box');
     var eqGeo=document.createElement('IndexedFaceSet');
     eqGeo.setAttribute('solid','true');
     eqGeo.setAttribute('colorPerVertex','false');
-    var eqGeoCoords=document.createElement('geoCoordinate');
+    var eqGeoCoords=document.createElement('GeoCoordinate');
     eqGeo.appendChild(eqGeoCoords);
-    eqColor=document.createElement('Color');
-    eqGeo.appendChild(eqColor);
+    var eqColor=document.createElement('Color');
+    //eqGeo.appendChild(eqColor);
+    var eqTexCoord=document.createElement('TextureCoordinate');
+    eqGeo.appendChild(eqTexCoord);
     eqShape.appendChild(eqGeo);
     const xmin = -29, xmax = -10, ymin = 50, ymax = 70, widthkm = 0.2, azi = -60*3.14/180;
     const minMagnitude = isMobile ? 2 : 1.6;
@@ -230,12 +246,14 @@
         var datascript = webpage.body.querySelector('.pgmain script:not([src])');
         var scr = document.createRange().createContextualFragment(datascript.outerHTML);
         document.body.appendChild(scr);
-        let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="";
+        let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
         eqData = VI.quakeInfo;
-        var data = eqData
+        var data = eqData;
+        var firstDate = eqData[eqData.length - 1].t;
         data.forEach((d, i) => {
             let c=[+d.lon, +d.lat, +d.dep];
             if (c[0]<xmin || c[0]>xmax || c[1]<ymin || c[1]>ymax) return
+            let hours = ( d.t - firstDate ) / 1000 / 3600;
             //document.querySelector('#faultInfo').textContent=data.length+" earthquakes, processed: " + ++counter;
             //let geoLoc=document.createElement('GeoLocation');
             //geoLoc.setAttribute('geoCoords',[c[1],c[0],-1000*c[2]].join());
@@ -270,6 +288,7 @@
                 x = r*Math.cos(lon*d2r);
                 y = r*Math.sin(lon*d2r);
                 point += [y*m2degLat + c[1], x*m2degLon + c[0], z-c[2]*1000].join()+' ';
+                texcoord += [ hours.toFixed(4), 0].join()+' ';
                 if (lat < 90) {
                   if (lon < (360 - 360/steps)) {
                     coordindex += [index++, index, index+steps, index+steps-1].join()+',-1 ';
@@ -344,10 +363,14 @@
         eqColor.setAttribute('color', color);
 //             data.features.map(d => {let c=d.geometry.coordinates;return [c[1],c[0],-c[2]*1000]}).join()
 //         );
+        eqTexCoord.setAttribute('point', texcoord);
         eqGeo.setAttribute('coordIndex', coordindex);
         eqGroup.appendChild(eqShape);
         document.querySelector('Scene').appendChild(eqGroup);
-        document.querySelector('#faultInfo').textContent = eqData.length  +" earthquakes displayed"; 
+        var route = document.createElement('container');
+        route.innerHTML = "<ROUTE fromNode='SHIFTER' fromField='value_changed' toNode='TEXTRAFO' toField='set_translation'></ROUTE>";
+        document.querySelector('Scene').appendChild(route.firstChild);
+        document.querySelector('#faultInfo').textContent = eqData.length  +" earthquakes displayed";
     })
   }
   function loadTraces() {
@@ -446,8 +469,15 @@
  gd.z >= 0 ? gd.z.toFixed(0).padStart(6, "0") : ("-"+ (-gd.z).toFixed(0).padStart(5,"0"))
  }m dip: ${dip.toFixed(0).padStart(2,"0")}°`;
       document.querySelector('[DEF="cursor"]').setAttribute('geoCoords', [gd.y, gd.x, gd.z].join());
-
   }
+
+  function showInterval(event) {
+     if (event.fieldName == 'value_changed')
+     {
+      document.querySelector('#faultInfo').textContent = (-event.value.x).toFixed(2) + ' hours since first event 48h ago';
+     }
+  }
+    
   function queryEvents(event) {
       let gc = x3dom.fields.MFVec3f.parse(event.hitPnt.toString());
       let gd = x3dom.nodeTypes.GeoCoordinate.prototype.GCtoGD(['GC','WE'], gc)[0];
