@@ -94,7 +94,8 @@
 <body onload='init()' >
   
 <div id='info'>
-    <h2>The 2023 Grindavik sequence, last 48h ( near real time data by Icelandic Meteorological Office ) </h2>
+    <!-- <h2>The 2023 Grindavik sequence, last 48h ( near real time data by Icelandic Meteorological Office ) </h2> -->
+    <h2>The 2023 Grindavik sequence, 2024-10-1 to 2024-12-28 ( data by Icelandic Meteorological Office ) </h2>
     <div>
         <span id='faultInfo'>Doubleclick to recenter</span>
     </div>
@@ -121,11 +122,11 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     <Scene onmousemove='showCoords(event)'>
         <PointLight ambientIntensity='0.2' radius='20000000'></PointLight>
         <NavigationInfo speed='0.1'></NavigationInfo>
-        <GeoViewpoint position="63.9 -22.434 30000" orientation="1 0 0 -1.57" _fieldOfView="0.3" centerofRotation="63.854 -22.434 -5000" description="map"></GeoViewpoint>
-        <GeoViewpoint position="63.7 -22.434 -5000" orientation="1 0 0 0" centerofRotation="63.854 -22.434 -5000" description="toNorth"></GeoViewpoint>
-        <GeoViewpoint position="64.1 -22.434 -5000" orientation="0 1 0 3.14" centerofRotation="63.854 -22.434 -5000" description="toSouth"></GeoViewpoint>
-        <GeoViewpoint position="63.9 -23.034 -5000" orientation="0 1 0 -1.57" centerofRotation="63.854 -22.434 -5000" description="toEast"></GeoViewpoint>
-        <GeoViewpoint position="63.9 -21.834 -5000" orientation="0 1 0 1.57" centerofRotation="63.854 -22.434 -5000" description="toWest"></GeoViewpoint>
+        <GeoViewpoint position="63.873 -22.397 30000" orientation="1 0 0 -1.5708" _fieldOfView="0.3" centerofRotation="63.873 -22.397 -000" description="map"></GeoViewpoint>
+        <GeoViewpoint position="63.7 -22.434 -5000" orientation="1 0 0 0" centerofRotation="63.873 -22.397 -5000" description="toNorth"></GeoViewpoint>
+        <GeoViewpoint position="64.1 -22.434 -5000" orientation="0 1 0 3.1415" centerofRotation="63.873 -22.397 -5000" description="toSouth"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -23.034 -5000" orientation="0 1 0 -1.5708" centerofRotation="63.873 -22.397 -5000" description="toEast"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -21.834 -5000" orientation="0 1 0 1.5708" centerofRotation="63.873 -22.397 -5000" description="toWest"></GeoViewpoint>
         
 <!--         <inline url="cal_outline.x3d"></inline>
         <inline url="QuaternaryFaults_CA_utm11nad27_scal2.x3d"></inline>
@@ -208,9 +209,9 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
         <Group DEF='CFM5' onclick="showName(event)">
       <!-- add fault inlines here -->
         </Group>
-        <TimeSensor DEF='CLOCK' loop='true' cycleInterval='15'></TimeSensor>
+        <TimeSensor DEF='CLOCK' loop='true' cycleInterval='30'></TimeSensor>
         <PositionInterpolator2D DEF='SHIFTER' key='0 0.3333 1' keyValue='0,0 -24,0 -72,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
-        <PositionInterpolator2D DEF='DAYSHIFTER' key='0 0.3333 1' keyValue='0,0 -30,0 -90,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
+        <PositionInterpolator2D DEF='DAYSHIFTER' key='0 0.3333 1' keyValue='0,0 -30,0 -100,0' onoutputchange='showIntervalDay(event)'></PostionInterpolator2D>
         <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='DAYSHIFTER' toField='set_fraction'></ROUTE>
     </Scene>
 </x3d>
@@ -231,8 +232,10 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     
     var eqShape=document.createElement('Shape');
     eqShape.setAttribute('DEF','hypo');
-    var eqApp=document.createElement('Appearance');
     
+    var eqApp=document.createElement('Appearance');
+    eqApp.setAttribute('alphaclipthreshold', '0.01');
+                       
     var eqMat=document.createElement('Material');
     eqMat.setAttribute('diffuseColor','0 1 1');
     eqMat.setAttribute('transparency','0.2');
@@ -241,7 +244,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     eqDepthmode.setAttribute('depthFunc','ALWAYS');
 
     var eqTex=document.createElement('PixelTexture');
-    eqTex.setAttribute('image','7 1 4 0xFF400080 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF000000');
+    eqTex.setAttribute('image','7 1 4 0xFF400018 0xFF800030 0xFF800040 0xFF8000A0 0xFF8000FF 0xFF8000FF 0xFF000000');
     eqTex.setAttribute('repeatS','false');
 
     var eqTexTrafo=document.createElement('TextureTransform');
@@ -478,6 +481,17 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
          document.querySelector('#faultInfo').textContent = (Math.min(-event.value.x, 48)).toFixed(2) +
            ' hours since 2023/' + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() +
            " " + firstDate.getUTCHours().toFixed(0).padStart(2,0) + ":" + firstDate.getUTCMinutes().toFixed(0).padStart(2,0);
+     }
+  }
+    
+  function showIntervalDay(event) {
+     if (event.fieldName == 'value_changed')
+     {
+         var value = Math.min(-event.value.x, 88);
+         var date = new Date(firstDate.getTime() +  value * 24 * 3600 * 1000);
+         document.querySelector('#faultInfo').textContent = value.toFixed(2) +
+           ' days since 2023/' + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() +
+           ": " + date.toISOString("no-IS");
      }
   }
     
