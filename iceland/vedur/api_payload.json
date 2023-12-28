@@ -47,6 +47,7 @@
     "event_id",
     "lat",
     "long",
+    "depth",
     "time",
     "magnitude",
     "event_type",

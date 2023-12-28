@@ -266,18 +266,34 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     eqShape.appendChild(eqGeo);
     const xmin = -29, xmax = -10, ymin = 50, ymax = 70, widthkm = 0.2, azi = -60*3.14/180;
     const minMagnitude = isMobile ? 2 : 1.6;
+    let EventsJsonUrl = '../vedur/quakearray_20241001-20241227.json'; 
     let EventsSourceUrl = 'https://corsproxy.io/?https://en.vedur.is/earthquakes-and-volcanism/earthquakes/reykjanespeninsula#view=table'; 
     // EventsSourceUrl += '&minmagnitude=' + minMagnitude;
     // EventsSourceUrl += '&eventtype=earthquake&orderby=time';
     //https://raw.githubusercontent.com/andreasplesch/VR-GeoCal/master/x3dom/earthquakes/queryUSGS070719_8amEDT.geojson
-    d3.html(EventsSourceUrl).then(function(webpage){
-        var datascript = webpage.body.querySelector('.pgmain script:not([src])');
-        var scr = document.createRange().createContextualFragment(datascript.outerHTML);
-        document.body.appendChild(scr);
-        let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
-        eqData = VI.quakeInfo;
+    d3.json(EventJsonUrl).then( function (eqApiData) ){
+    //d3.html(EventsSourceUrl).then(function(webpage){
+        // var datascript = webpage.body.querySelector('.pgmain script:not([src])');
+        // var scr = document.createRange().createContextualFragment(datascript.outerHTML);
+        // document.body.appendChild(scr);
+        // let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
+        // eqData = VI.quakeInfo;
+        const apiData = eqApiData.data;
+        eqData = apiData.event_id.map( (d, i) => {
+          return {
+            event_id: d;
+            event_type: apiData.event_type[i];
+            lat: apiData.lat[i];
+            lon: apiData.long[i];
+            dep: apiData.depth[i];
+            s: apiData.magnitude[i];
+            originating_system: apiData.originating_system[i];
+            t: apiData.time[i];
+          }
+        });
         var data = eqData;
-        firstDate = eqData[eqData.length - 1].t;
+        //firstDate = eqData[eqData.length - 1].t;
+        firstDate = eqData[0].t;
         data.forEach((d, i) => {
             let c=[+d.lon, +d.lat, +d.dep];
             if (c[0]<xmin || c[0]>xmax || c[1]<ymin || c[1]>ymax) return
