@@ -281,14 +281,14 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
         const apiData = eqApiData.data;
         eqData = apiData.event_id.map( (d, i) => {
           return {
-            event_id: d;
-            event_type: apiData.event_type[i];
-            lat: apiData.lat[i];
-            lon: apiData.long[i];
-            dep: apiData.depth[i];
-            s: apiData.magnitude[i];
-            originating_system: apiData.originating_system[i];
-            t: apiData.time[i];
+            event_id: d,
+            event_type: apiData.event_type[i],
+            lat: apiData.lat[i],
+            lon: apiData.long[i],
+            dep: apiData.depth[i],
+            s: apiData.magnitude[i],
+            originating_system: apiData.originating_system[i],
+            t: apiData.time[i]
           }
         });
         var data = eqData;
