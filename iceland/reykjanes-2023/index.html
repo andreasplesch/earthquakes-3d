@@ -210,7 +210,8 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
         </Group>
         <TimeSensor DEF='CLOCK' loop='true' cycleInterval='15'></TimeSensor>
         <PositionInterpolator2D DEF='SHIFTER' key='0 0.3333 1' keyValue='0,0 -24,0 -72,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
-        <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='SHIFTER' toField='set_fraction'></ROUTE>
+        <PositionInterpolator2D DEF='DAYSHIFTER' key='0 0.3333 1' keyValue='0,0 -30,0 -90,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
+        <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='DAYSHIFTER' toField='set_fraction'></ROUTE>
     </Scene>
 </x3d>
 </div>
@@ -271,13 +272,13 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     // EventsSourceUrl += '&minmagnitude=' + minMagnitude;
     // EventsSourceUrl += '&eventtype=earthquake&orderby=time';
     //https://raw.githubusercontent.com/andreasplesch/VR-GeoCal/master/x3dom/earthquakes/queryUSGS070719_8amEDT.geojson
-    d3.json(EventJsonUrl).then( function (eqApiData) ){
+    d3.json(EventsJsonUrl).then( function (eqApiData) {
     //d3.html(EventsSourceUrl).then(function(webpage){
         // var datascript = webpage.body.querySelector('.pgmain script:not([src])');
         // var scr = document.createRange().createContextualFragment(datascript.outerHTML);
         // document.body.appendChild(scr);
-        // let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
         // eqData = VI.quakeInfo;
+        let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
         const apiData = eqApiData.data;
         eqData = apiData.event_id.map( (d, i) => {
           return {
@@ -298,6 +299,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
             let c=[+d.lon, +d.lat, +d.dep];
             if (c[0]<xmin || c[0]>xmax || c[1]<ymin || c[1]>ymax) return
             let hours = ( d.t - firstDate ) / 1000 / 3600;
+            hours = hours / 24;
             //document.querySelector('#faultInfo').textContent=data.length+" earthquakes, processed: " + ++counter;
             //let geoLoc=document.createElement('GeoLocation');
             //geoLoc.setAttribute('geoCoords',[c[1],c[0],-1000*c[2]].join());
@@ -365,7 +367,8 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
         eqGroup.appendChild(eqShape);
         document.querySelector('Scene').appendChild(eqGroup);
         var route = document.createElement('container');
-        route.innerHTML = "<ROUTE fromNode='SHIFTER' fromField='value_changed' toNode='TEXTRAFO' toField='set_translation'></ROUTE>";
+        //route.innerHTML = "<ROUTE fromNode='SHIFTER' fromField='value_changed' toNode='TEXTRAFO' toField='set_translation'></ROUTE>";
+        route.innerHTML = "<ROUTE fromNode='DAYSHIFTER' fromField='value_changed' toNode='TEXTRAFO' toField='set_translation'></ROUTE>";
         document.querySelector('Scene').appendChild(route.firstChild);
         document.querySelector('#faultInfo').textContent = eqData.length  +" earthquakes displayed";
     })
