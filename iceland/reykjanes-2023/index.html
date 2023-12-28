@@ -241,7 +241,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     eqDepthmode.setAttribute('depthFunc','ALWAYS');
 
     var eqTex=document.createElement('PixelTexture');
-    eqTex.setAttribute('image','7 1 4 0xFF4000C0 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF000000');
+    eqTex.setAttribute('image','7 1 4 0xFF400080 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF000000');
     eqTex.setAttribute('repeatS','false');
 
     var eqTexTrafo=document.createElement('TextureTransform');
@@ -289,7 +289,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
             dep: apiData.depth[i],
             s: apiData.magnitude[i],
             originating_system: apiData.originating_system[i],
-            t: apiData.time[i]
+            t: new Date(apiData.time[i] * 1000)
           }
         });
         var data = eqData;
