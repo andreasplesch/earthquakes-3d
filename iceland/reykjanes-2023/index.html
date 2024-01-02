@@ -211,7 +211,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
         </Group>
         <TimeSensor DEF='CLOCK' loop='true' cycleInterval='30'></TimeSensor>
         <PositionInterpolator2D DEF='SHIFTER' key='0 0.3333 1' keyValue='0,0 -24,0 -72,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
-        <PositionInterpolator2D DEF='DAYSHIFTER' key='0 0.3333 1' keyValue='0,0 -30,0 -100,0' onoutputchange='showIntervalDay(event)'></PostionInterpolator2D>
+        <PositionInterpolator2D DEF='DAYSHIFTER' key='0 0.3333 1' keyValue='0,0 -30,0 -110,0' onoutputchange='showIntervalDay(event)'></PostionInterpolator2D>
         <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='DAYSHIFTER' toField='set_fraction'></ROUTE>
     </Scene>
 </x3d>
@@ -488,7 +488,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
   function showIntervalDay(event) {
      if (event.fieldName == 'value_changed')
      {
-         var value = Math.min(-event.value.x, 88);
+         var value = Math.min(-event.value.x, 93);
          var date = new Date(firstDate.getTime() +  value * 24 * 3600 * 1000);
          document.querySelector('#faultInfo').textContent = value.toFixed(2) +
            ' days since 2023/' + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() +
