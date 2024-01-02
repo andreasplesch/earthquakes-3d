@@ -95,7 +95,7 @@
   
 <div id='info'>
     <!-- <h2>The 2023 Grindavik sequence, last 48h ( near real time data by Icelandic Meteorological Office ) </h2> -->
-    <h2>The 2023 Grindavik sequence, 2024-10-1 to 2024-12-28 ( data by Icelandic Meteorological Office ) </h2>
+    <h2>The 2023 Grindavik sequence, 2023-10-1 to 2024-01-02 ( data by Icelandic Meteorological Office ) </h2>
     <div>
         <span id='faultInfo'>Doubleclick to recenter</span>
     </div>
@@ -270,7 +270,8 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
     eqShape.appendChild(eqGeo);
     const xmin = -29, xmax = -10, ymin = 50, ymax = 70, widthkm = 0.2, azi = -60*3.14/180;
     const minMagnitude = isMobile ? 2 : 1.6;
-    let EventsJsonUrl = '../vedur/quakearray_20241001-20241227.json'; 
+    let EventsJsonUrl = '../vedur/quakearray_20231001-20240102.json'; 
+    //let EventsJsonUrl = '../vedur/quakearray_20241001-20241227.json'; 
     let EventsSourceUrl = 'https://corsproxy.io/?https://en.vedur.is/earthquakes-and-volcanism/earthquakes/reykjanespeninsula#view=table'; 
     // EventsSourceUrl += '&minmagnitude=' + minMagnitude;
     // EventsSourceUrl += '&eventtype=earthquake&orderby=time';
