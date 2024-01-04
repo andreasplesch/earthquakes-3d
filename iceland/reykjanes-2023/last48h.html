@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Reykjanes-2023 grindavik eruption</title>
+    <link rel="icon"
+             type="image/png"
+             sizes="32x32"
+             href="../res/x3dom-whiteOnblue32.png"/>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/release/x3dom.css">
+    <script type="text/javascript" src="https://www.x3dom.org/release/x3dom-full.js"></script>
+    <script src="//d3js.org/d3.v5.min.js"></script>
+    <style>
+      #x3dscene {
+        background-color: black;
+        width: 100%;
+        height:  100%;
+        position: fixed;
+        margin: 0;
+      }
+      #info {
+          position: absolute;
+          z-index: 100;
+          color: white;
+          font-family: monospace;
+          font-size: large;
+          opacity: 0.8;
+          width: 100%;
+          text-align: center;
+          pointer-events: none;
+      }
+      #help {
+          margin-left: auto;
+          background-color: #062c2c6e;
+          position: absolute;
+          z-index: 200;
+          color: #f3f3f385;
+          font-family: fantasy;
+          font-size: 1em;
+          /* opacity: 0.5; */
+          width: auto;
+          text-align: right;
+          padding: 10px;
+          right: 0px;
+      }
+      #helpScreen {
+          margin-left: auto;
+          background-color: #062c2c;
+          position: absolute;
+          z-index: 200;
+          color: #f3f3f385;
+          font-family: monospace;
+          font-size: 0.8em;
+          /* opacity: 0.5; */
+          width: 30%;
+          text-align: center;
+          padding: 10px;
+          right: 35%;
+          top: 50%;
+          display: none;
+      }
+      [id*=button] {
+          cursor: pointer;
+          margin: 2px;
+          border-style: outset;
+          padding: 6px;
+          text-align: center;
+      }
+      [id*=button]:hover {
+          background: #950000;
+          color: #ccc;
+          /* opacity: 1.0; */
+      }
+      #eqInfo {
+          pointer-events: initial;
+          color: yellow;
+          font-weight: normal;
+          text-decoration-line: none;
+      }
+      #eqInfo:hover {
+          font-weight: bold;
+      }
+      
+      body {
+          width:100%; height:100%; border:0; margin:0; padding:0;
+      }
+
+
+      </style>
+</head>
+<body onload='init()' >
+  
+<div id='info'>
+    <h2>The 2023 Grindavík sequence, last 48h ( near real time data by Icelandic Meteorological Office ) </h2>
+    <div>
+        <span id='faultInfo'>Doubleclick to recenter</span>
+    </div>
+    <div><a id='eqInfo' target="_blank" href='https://en.vedur.is/earthquakes-and-volcanism/earthquakes/reykjanespeninsula/#view=table'>Click on an earthquake</a></div>
+</div>
+<div id='help'>
+  <div id='mapbutton' onclick="setView('map')">Map</div>
+  <div id='northbutton' onclick="setView('toNorth')">North</div>
+  <div id='southbutton' onclick="setView('toSouth')">South</div>
+  <div id='eastbutton' onclick="setView('toEast')">East</div>
+  <div id='westbutton' onclick="setView('toWest')">West</div>
+  <div id='helpbutton' onclick="showHelp()">?</div>
+</div>
+<div id='helpScreen'>
+  <div>Data sources: Icelandic Meteorological Office (IMO), DEM and imagery based on data from The Icelandic Institute of Natural
+History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræðistofnun Íslands is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/), Landmælingar Íslands.</div>
+  <div>Technology: X3D (web3d.org), x3dom (x3dom.org)</div>
+  <div>Idea and execution: A. Plesch (github.com/andreasplesch)</div>
+</div>
+<div id="frame">
+<x3d id="x3dscene" primitiveQuality='Medium' onDownloadsfinished='tuneInlines(event)'>
+    <param name="showLog" value="false"></param>
+    <param name="showStat" value="false"></param>
+    <Scene onmousemove='showCoords(event)'>
+        <PointLight ambientIntensity='0.2' radius='20000000'></PointLight>
+        <NavigationInfo speed='0.1'></NavigationInfo>
+        <GeoViewpoint position="63.9 -22.434 30000" orientation="1 0 0 -1.57" _fieldOfView="0.3" centerofRotation="63.854 -22.434 -5000" description="map"></GeoViewpoint>
+        <GeoViewpoint position="63.7 -22.434 -5000" orientation="1 0 0 0" centerofRotation="63.854 -22.434 -5000" description="toNorth"></GeoViewpoint>
+        <GeoViewpoint position="64.1 -22.434 -5000" orientation="0 1 0 3.14" centerofRotation="63.854 -22.434 -5000" description="toSouth"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -23.034 -5000" orientation="0 1 0 -1.57" centerofRotation="63.854 -22.434 -5000" description="toEast"></GeoViewpoint>
+        <GeoViewpoint position="63.9 -21.834 -5000" orientation="0 1 0 1.57" centerofRotation="63.854 -22.434 -5000" description="toWest"></GeoViewpoint>
+        
+<!--         <inline url="cal_outline.x3d"></inline>
+        <inline url="QuaternaryFaults_CA_utm11nad27_scal2.x3d"></inline>
+        <inline namespacename='cfm' url="CFM52/traces/CFM52_preferred_traces_all5.x3d"></inline>
+        <inline namespacename='mil' url="CFM52/traces/NewFaults4Millner.x3d"></inline> -->
+        
+        <GeoLocation DEF='cursor' geoCoords="64 -22 0">
+            <Transform >
+                <Shape ispickable='false'>
+                  <Appearance DEF='cursorApp'>
+                      <Material diffuseColor='1 1 1'></Material>
+                  </Appearance>
+                  <Box size='1000 100 100'></Box>
+                </Shape>
+                <Shape ispickable='false'>
+                  <Appearance USE='cursorApp'></Appearance>
+                  <Box size='100 1000 100'></Box>
+                </Shape>
+                <Shape ispickable='false'>
+                  <Appearance USE='cursorApp'></Appearance>
+                  <Box size='100 100 1000'></Box>
+                </Shape>
+            </Transform>
+        </GeoLocation>
+        <GeoLocation DEF='eqSelection' geoCoords="63 -22 0">
+          <Transform DEF='eqSelTransform'>
+            <Transform DEF='eqSelX' translation='0 -100 -100'>
+              <Shape DEF='eqxBar'>
+                <Appearance DEF='eqSelApp'>
+                  <Material diffuseColor='1 1 0'></Material>
+                  <DepthMode depthFunc='ALWAYS'></DepthMode>
+                </Appearance>
+                <Box size='240 20 20'></Box>
+              </Shape>
+            </Transform>
+            <Transform translation='0 100 -100'>
+              <Shape USE='eqxBar'></Shape>
+            </Transform>
+            <Transform translation='0 100 100'>
+              <Shape USE='eqxBar'></Shape>
+            </Transform>
+            <Transform translation='0 -100 100'>
+              <Shape USE='eqxBar'></Shape>
+            </Transform>
+            <Transform translation='-100 0 -100'>
+              <Shape DEF='eqyBar'>
+                <Appearance USE='eqSelApp'></Appearance>
+                <Box size='20 240 20'></Box>
+              </Shape>
+            </Transform>
+            <Transform translation='100 0 -100'>
+              <Shape USE='eqyBar'></Shape>
+            </Transform>
+            <Transform translation='100 0 100'>
+              <Shape USE='eqyBar'></Shape>
+            </Transform>
+            <Transform translation='-100 0 100'>
+              <Shape USE='eqyBar'></Shape>
+            </Transform>
+            <Transform translation='-100 -100 0'>
+              <Shape DEF='eqzBar'>
+                <Appearance USE='eqSelApp'></Appearance>
+                <Box size='20 20 240'></Box>
+              </Shape>
+            </Transform>
+            <Transform translation='100 -100 0'>
+              <Shape USE='eqzBar'></Shape>
+            </Transform>
+            <Transform translation='100 100 0'>
+              <Shape USE='eqzBar'></Shape>
+            </Transform>
+            <Transform translation='-100 100 0'>
+              <Shape USE='eqzBar'></Shape>
+            </Transform>
+          </Transform>
+        </GeoLocation>
+        <GeoLocation geoCoords="63.898 -22.256944 -0">
+          <Inline url='"../gltf/fagradalsfjall_02.11.2023.glb"'></Inline>
+        </GeoLocation>
+        <Group DEF='CFM5' onclick="showName(event)">
+      <!-- add fault inlines here -->
+        </Group>
+        <TimeSensor DEF='CLOCK' loop='true' cycleInterval='15'></TimeSensor>
+        <PositionInterpolator2D DEF='SHIFTER' key='0 0.3333 1' keyValue='0,0 -24,0 -72,0' onoutputchange='showInterval(event)'></PostionInterpolator2D>
+        <ROUTE fromNode='CLOCK' fromField='fraction_changed' toNode='SHIFTER' toField='set_fraction'></ROUTE>
+    </Scene>
+</x3d>
+</div>
+  <script type="text/javascript">
+  var eqData, firstDate = new Date(); // global to share
+  function init() {
+
+    loadTraces();
+    
+    //attachonclick(document.querySelectorAll('inline[url*=CFM5]'));
+
+    var isMobile = navigator.userAgent.includes("obi");
+
+    var eqGroup=document.createElement('Group');
+    eqGroup.setAttribute('DEF','Sequence');
+    eqGroup.setAttribute('onclick', 'queryEvents(event)')
+    
+    var eqShape=document.createElement('Shape');
+    eqShape.setAttribute('DEF','hypo');
+    var eqApp=document.createElement('Appearance');
+    
+    var eqMat=document.createElement('Material');
+    eqMat.setAttribute('diffuseColor','0 1 1');
+    eqMat.setAttribute('transparency','0.2');
+    
+    var eqDepthmode=document.createElement('DepthMode');
+    eqDepthmode.setAttribute('depthFunc','ALWAYS');
+
+    var eqTex=document.createElement('PixelTexture');
+    eqTex.setAttribute('image','7 1 4 0xFF4000C0 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF8000FF 0xFF000000');
+    eqTex.setAttribute('repeatS','false');
+
+    var eqTexTrafo=document.createElement('TextureTransform');
+    eqTexTrafo.setAttribute('scale','0.25 0.25');
+    eqTexTrafo.setAttribute('DEF','TEXTRAFO');
+
+    eqApp.appendChild(eqMat);
+    eqApp.appendChild(eqTex);
+    eqApp.appendChild(eqTexTrafo);
+    eqApp.appendChild(eqDepthmode);
+
+    eqShape.appendChild(eqApp);
+    //eqGeo=document.createElement('Box');
+    var eqGeo=document.createElement('IndexedFaceSet');
+    eqGeo.setAttribute('solid','true');
+    eqGeo.setAttribute('colorPerVertex','false');
+    var eqGeoCoords=document.createElement('GeoCoordinate');
+    eqGeo.appendChild(eqGeoCoords);
+    var eqColor=document.createElement('Color');
+    //eqGeo.appendChild(eqColor);
+    var eqTexCoord=document.createElement('TextureCoordinate');
+    eqGeo.appendChild(eqTexCoord);
+    eqShape.appendChild(eqGeo);
+    const xmin = -29, xmax = -10, ymin = 50, ymax = 70, widthkm = 0.2, azi = -60*3.14/180;
+    const minMagnitude = isMobile ? 2 : 1.6;
+    let EventsSourceUrl = 'https://corsproxy.io/?https://en.vedur.is/earthquakes-and-volcanism/earthquakes/reykjanespeninsula#view=table'; 
+    // EventsSourceUrl += '&minmagnitude=' + minMagnitude;
+    // EventsSourceUrl += '&eventtype=earthquake&orderby=time';
+    //https://raw.githubusercontent.com/andreasplesch/VR-GeoCal/master/x3dom/earthquakes/queryUSGS070719_8amEDT.geojson
+    d3.html(EventsSourceUrl).then(function(webpage){
+        var datascript = webpage.body.querySelector('.pgmain script:not([src])');
+        var scr = document.createRange().createContextualFragment(datascript.outerHTML);
+        document.body.appendChild(scr);
+        let counter = 0, index = 0, coordindex="", km2deg = 1/110, m2deg = km2deg/1000; point="", color="", texcoord="";
+        eqData = VI.quakeInfo;
+        var data = eqData;
+        firstDate = eqData[eqData.length - 1].t;
+        data.forEach((d, i) => {
+            let c=[+d.lon, +d.lat, +d.dep];
+            if (c[0]<xmin || c[0]>xmax || c[1]<ymin || c[1]>ymax) return
+            let hours = ( d.t - firstDate ) / 1000 / 3600;
+            //document.querySelector('#faultInfo').textContent=data.length+" earthquakes, processed: " + ++counter;
+            //let geoLoc=document.createElement('GeoLocation');
+            //geoLoc.setAttribute('geoCoords',[c[1],c[0],-1000*c[2]].join());
+            //let t=document.createElement('Transform');
+            let mag=d.s;
+            //Length = 10^(-3.55+0.74*Mag)
+            //let length=Math.max(0.5, Math.pow(10,-3.22 + 0.69*mag));//*1000;
+            //let area=Math.max(1, Math.pow(10,-3.42 + 0.90*mag)*1000*1000);
+            //let area=(mag < 6.71 ? Math.pow(10, -3.98 + mag) : Math.pow(10, 0.75*(-3.07 + mag)));//*1000*1000;
+            //let rotation = new x3dom.fields.SFMatrix4f.rotationZ(azi);
+            //let translation = new x3dom.fields.SFMatrix4f.translation(new x3dom.fields.SFVec3f(c[0],c[1],-1000*c[2]));
+            //let trafo = translation;//mult.(rotation);
+            //let w=km2deg*widthkm, l=km2deg*length/2, h=1000*0.5*area/length;
+            let h = mag*300, l = km2deg * h/1000, w = l;
+            
+//             let minA=trafo.multMatrixPnt(
+//              new x3dom.fields.SFVec3f(-w, -l, -h));
+//             let minB=trafo.multMatrixPnt(
+//              new x3dom.fields.SFVec3f(w, -l, -h));
+//             let maxA=trafo.multMatrixPnt(
+//              new x3dom.fields.SFVec3f(-w, l, h));
+//             let maxB=trafo.multMatrixPnt(
+//              new x3dom.fields.SFVec3f(w, l, h));
+            
+            var r,x,y,z,d2r = Math.PI/180, smag=200*mag,
+              m2degLat = 360/40000000, m2degLon = m2degLat/Math.cos(64*d2r),
+              steps = isMobile ? 4 : 8;
+            for (var lat=-90; lat<=90; lat += 360/steps) {
+              r = smag*Math.cos(lat*d2r);
+              z = smag*Math.sin(lat*d2r);
+              for (var lon=0; lon<360; lon += 360/steps) {
+                x = r*Math.cos(lon*d2r);
+                y = r*Math.sin(lon*d2r);
+                point += [y*m2degLat + c[1], x*m2degLon + c[0], z-c[2]*1000].join()+' ';
+                texcoord += [ hours.toFixed(4), 0].join()+' ';
+                if (lat < 90) {
+                  if (lon < (360 - 360/steps)) {
+                    coordindex += [index++, index, index+steps, index+steps-1].join()+',-1 ';
+                  }
+                  else {
+                    coordindex += [index++, index-steps, index, index+steps-1].join()+',-1 ';
+                  } 
+                } 
+              }
+            }
+            index += steps;
+
+            
+            const baseIndex = index;
+            
+            let colorC = mag/4.0;
+            let d3c = d3.cubehelix(30+(colorC*330), 1.9*(colorC), 0.8*colorC).rgb();
+            let sfcolor = [(d3c.r/255).toFixed(4), (d3c.g/255).toFixed(4), (d3c.b/255).toFixed(4)].join(' ');
+            
+            color += (sfcolor+",").repeat(steps*steps/2-1)+sfcolor+' ';
+
+        })
+
+        eqGeoCoords.setAttribute('point', point);
+        eqColor.setAttribute('color', color);
+//             data.features.map(d => {let c=d.geometry.coordinates;return [c[1],c[0],-c[2]*1000]}).join()
+//         );
+        eqTexCoord.setAttribute('point', texcoord);
+        eqGeo.setAttribute('coordIndex', coordindex);
+        eqGroup.appendChild(eqShape);
+        document.querySelector('Scene').appendChild(eqGroup);
+        var route = document.createElement('container');
+        route.innerHTML = "<ROUTE fromNode='SHIFTER' fromField='value_changed' toNode='TEXTRAFO' toField='set_translation'></ROUTE>";
+        document.querySelector('Scene').appendChild(route.firstChild);
+        document.querySelector('#faultInfo').textContent = eqData.length  +" earthquakes displayed";
+    })
+  }
+  function loadTraces() {
+
+//       var traceUrl = 'https://raw.githubusercontent.com/andreasplesch/VR-GeoCal/master/x3dom/CFM52/traces/CFM52_preferred_traces_all5.geojson';
+      
+//       d3.json(traceUrl).then(loadGeojson, console.log)
+//         .then(appendToScene, console.log);
+        // var MillnerUrl = 'https://raw.githubusercontent.com/andreasplesch/VR-GeoCal/master/x3dom/CFM52/traces/New_faults4_Millner.geojson';
+//         d3.json(MillnerUrl).then(loadGeojson, console.log)
+//           .then(appendToScene, console.log);
+        // var PontiUrl = 'https://raw.githubusercontent.com/andreasplesch/VR-GeoCal/master/x3dom/CFM52/traces/SurfaceRuptureMashupDPonti20190716.geojson';
+    var coastUrl = '../geojson/strandlina-linur.json';    
+    d3.json(coastUrl).then(loadGeojson, console.log)
+          .then(appendToScene, console.log);
+        
+                    
+     
+  }
+  function loadGeojson(geojson) {
+      var shape = document.createElement('Shape');
+      shape.setAttribute('DEF', geojson.name || 'geojson');
+      var app = document.createElement('Appearance');
+      var material = document.createElement('Material');
+      material.setAttribute('emissiveColor','0 1 1');
+      var lineprop = document.createElement('LineProperties');
+      lineprop.setAttribute('lineWidthScaleFactor','4');
+      app.appendChild(material);
+      app.appendChild(lineprop);
+      var ils = document.createElement('IndexedLineSet');
+      var gc = document.createElement('geoCoordinate');
+      ils.appendChild(gc);
+      shape.appendChild(app);
+      shape.appendChild(ils);
+      var point = "", coordIndex="", counter = 0;
+      geojson.features.forEach(d => {
+          let coords = d.geometry.coordinates;
+          if (Array.isArray(coords[0][0])) { coords = coords[0]; }
+          coords.forEach(xyz => {
+              point += [ xyz[1].toFixed(5), xyz[0].toFixed(5), (xyz[2] || 0).toFixed(1) ].join() + " ";
+              coordIndex += counter++ + ' ';
+          })
+          point += "\n";
+          coordIndex += "-1,\n";
+      })
+      gc.setAttribute('point', point);
+      ils.setAttribute('coordIndex', coordIndex);
+      return shape;
+  }
+  function appendToScene(child) {
+    document.querySelector('Scene').appendChild(child);
+    return;
+  }
+
+  function attachonclick(elements) {
+      elements.forEach(el => { el.setAttribute('onclick','showName(event)'); });
+  }
+  function showName(e) {
+      let name = e.target.getAttribute('DEF');
+      document.querySelector('#faultInfo').textContent=name;
+  }
+  function setView(description) {
+      let rt = document.querySelector('x3d').runtime;
+      let vp = rt.getActiveBindable('Geoviewpoint');
+      let target = document.querySelector("Geoviewpoint[description="+description+"]");
+      if (target == vp) rt.resetView();
+      else target.setAttribute('bind','true');
+  }
+  function tuneInlines(e) {
+      document.querySelectorAll('[namespacename="ns"]').forEach(inl =>
+      {
+          let ifs = inl.querySelector('IndexedFaceSet');
+          ifs.setAttribute('creaseAngle', "3.14");
+          let parent=ifs.parentElement;
+          parent.removeChild(ifs);
+          parent.appendChild(ifs);
+          let dcolor=[124/255, 161/255, 82/255];
+          let def = inl.querySelector('Shape').getAttribute('DEF');
+          if (def.includes("Little_Lake") || def.includes("Airport_Lake")) dcolor=[1,0,0];
+          inl.querySelector('Material').setAttribute('diffuseColor', dcolor.join());
+          inl.querySelector('Material').setAttribute('transparency', 0.3);
+          //inl.querySelector('Appearance').setAttribute('sortKey', 0);
+    
+      })      
+  }
+  function showCoords(event) {
+      let gc = x3dom.fields.MFVec3f.parse(event.hitPnt.toString());
+      let gd = x3dom.nodeTypes.GeoCoordinate.prototype.GCtoGD(['GC','WE'], gc)[0];
+      //gd.z += 250;
+      //var veNode = event.hitObject.querySelector('[yscale]'); // any child object with yscale attribute
+      //var ve = veNode ? 1.0 * veNode.yscale : 1.0 ;
+      let n = new x3dom.fields.SFVec3f(event.normalX, event.normalY, event.normalZ);
+      let dip = Math.acos(gc[0].normalize().dot(n)) * 180/Math.PI;
+      dip = dip > 90 ? 180 - dip : dip;
+      document.querySelector('#eqInfo').textContent = 
+ `${(-gd.x).toFixed(3)}°W ${gd.y.toFixed(3)}°N ${
+ gd.z >= 0 ? gd.z.toFixed(0).padStart(6, "0") : ("-"+ (-gd.z).toFixed(0).padStart(5,"0"))
+ }m`;// dip: ${dip.toFixed(0).padStart(2,"0")}°`;
+      document.querySelector('[DEF="cursor"]').setAttribute('geoCoords', [gd.y, gd.x, gd.z].join());
+  }
+
+  function showInterval(event) {
+     if (event.fieldName == 'value_changed')
+     {
+         document.querySelector('#faultInfo').textContent = (Math.min(-event.value.x, 48)).toFixed(2) +
+           ' hours since 2023/' + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() +
+           " " + firstDate.getUTCHours().toFixed(0).padStart(2,0) + ":" + firstDate.getUTCMinutes().toFixed(0).padStart(2,0);
+     }
+  }
+    
+  function queryEvents(event) {
+      let gc = x3dom.fields.MFVec3f.parse(event.hitPnt.toString());
+      let gd = x3dom.nodeTypes.GeoCoordinate.prototype.GCtoGD(['GC','WE'], gc)[0];
+      const degLat2m = 40000000/360, d2r = Math.PI/180, degLon2m = degLat2m/Math.cos(64*d2r); // rough conversion to cartesian
+      var hit = new x3dom.fields.SFVec3f(gd.x*degLon2m, gd.y*degLat2m, gd.z);
+      var cPoint = new x3dom.fields.SFVec3f();
+      var dmin = 1e99, dist, eqIndex;
+      eqData.forEach( (d,i) => {
+        let c=[+d.lon, +d.lat, +d.dep];
+        cPoint.set(c[0]*degLon2m, c[1]*degLat2m, c[2]*-1000);
+        dist = cPoint.subtract(hit).length();
+        if ((dist < dmin)) {
+          dmin = dist;
+          eqIndex = i;
+        }
+      });
+
+      let eqFeature = eqData[eqIndex];
+      
+      let eqProperties = eqFeature;
+      document.querySelector('#eqInfo').textContent = eqProperties.a+": M " + eqProperties.s+", at "+(new Date(eqProperties.t).toISOString());
+      //document.querySelector('#eqInfo').href = eqProperties.url;
+      
+      let eqCoordinates = [+eqFeature.lon, +eqFeature.lat, +eqFeature.dep];
+      let selSize = 2;
+      document.querySelector('[DEF=eqSelection]').setAttribute('geoCoords', [eqCoordinates[1],eqCoordinates[0],eqCoordinates[2]*-1000].join());
+      document.querySelector('[DEF=eqSelTransform]').setAttribute('scale', [eqProperties.s*selSize,eqProperties.s*selSize,eqProperties.s*selSize].join());
+  }
+  function showHelp() {
+      var help = document.querySelector('#helpScreen');
+      help.style.display = help.style.display == 'block' ? 'none' : 'block'
+  }
+
+   </script>
+  </body>
+</html>
