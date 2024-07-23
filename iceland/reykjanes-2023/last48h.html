@@ -457,7 +457,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
      if (event.fieldName == 'value_changed')
      {
          document.querySelector('#faultInfo').textContent = (Math.min(-event.value.x, 48)).toFixed(2) +
-           ' hours since ' +  firstDate.getUTCFullYear + "/" + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() +
+           ' hours since ' +  firstDate.getUTCFullYear() + "/" + (firstDate.getUTCMonth()+1) + "/" + firstDate.getUTCDate() +
            " " + firstDate.getUTCHours().toFixed(0).padStart(2,0) + ":" + firstDate.getUTCMinutes().toFixed(0).padStart(2,0);
      }
   }
