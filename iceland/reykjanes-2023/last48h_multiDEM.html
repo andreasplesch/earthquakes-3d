@@ -173,7 +173,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
             <Transform translation='-100 0 -100'>
               <Shape DEF='eqyBar'>
                 <Appearance USE='eqSelApp'></Appearance>
-                <Box size='20 240 20'></Box>
+                <Box size='5 240 5'></Box>
               </Shape>
             </Transform>
             <Transform translation='100 0 -100'>
@@ -205,7 +205,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
         <GeoLocation geoCoords="63.898 -22.256944 -0">
           <Inline url='"../gltf/fagradalsfjall_02.11.2023.glb"'></Inline>
         </GeoLocation>
-        <GeoLocation geoCoords="63.898 -22.256944 -0">
+        <GeoLocation geoCoords="63.9292 -22.404944 150">
           <Inline url='"../gltf/sundhnuksgigar_eruption_7-30.04.2024_time_1520.glb"'></Inline>
         </GeoLocation>
         <Group DEF='CFM5' onclick="showName(event)">
@@ -450,7 +450,7 @@ History, "Fagradalsfjall 02.11.2023" (https://skfb.ly/oNxV7) by Náttúrufræði
       let dip = Math.acos(gc[0].normalize().dot(n)) * 180/Math.PI;
       dip = dip > 90 ? 180 - dip : dip;
       document.querySelector('#eqInfo').textContent = 
- `${(-gd.x).toFixed(3)}°W ${gd.y.toFixed(3)}°N ${
+ `${(-gd.x).toFixed(5)}°W ${gd.y.toFixed(5)}°N ${
  gd.z >= 0 ? gd.z.toFixed(0).padStart(6, "0") : ("-"+ (-gd.z).toFixed(0).padStart(5,"0"))
  }m`;// dip: ${dip.toFixed(0).padStart(2,"0")}°`;
       document.querySelector('[DEF="cursor"]').setAttribute('geoCoords', [gd.y, gd.x, gd.z].join());
